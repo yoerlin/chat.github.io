@@ -4,8 +4,10 @@
 <meta charset="UTF-8">
 <title>Chat privado</title>
 
+<!-- Viewport para que NO se vea pequeño en móviles -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
 <style>
-/* -------------------- RESET -------------------- */
 * {
   margin: 0;
   padding: 0;
@@ -13,170 +15,151 @@
   font-family: "Segoe UI", Arial, sans-serif;
 }
 
-/* -------------------- BODY -------------------- */
-body {
-  background: #d9d9d9;
+/* El body siempre ocupa la pantalla completa */
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: #111;
+  touch-action: manipulation;
+}
+
+/* Contenedor general que centra el chat/log-in en pantallas grandes,
+   pero en móvil ocupa toda la pantalla */
+#app {
+  height: 100vh;
+  width: 100%;
   display: flex;
   justify-content: center;
-  padding: 20px;
+  align-items: stretch;
 }
 
-.dark {
-  background: #1a1a1a;
-  color: #eee;
+/* Contenedor del contenido (login o chat) */
+.app-inner {
+  width: 100%;
+  max-width: 480px;      /* ancho máximo en PC/tablet */
+  height: 100vh;         /* SIEMPRE pantalla completa */
+  background: #d9d9d9;
 }
 
-/* -------------------- LOGIN -------------------- */
+/* LOGIN: pantalla completa dentro del app-inner */
 #login {
   width: 100%;
-  max-width: 350px;
+  height: 100%;
   background: white;
   padding: 25px;
-  border-radius: 16px;
-  box-shadow: 0 0 25px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-#login input {
-  width: 100%;
-  padding: 12px;
-  margin-top: 8px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-}
-
-#login button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 12px;
-  border: none;
-  border-radius: 10px;
-  background: #25d366;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-#login button:hover {
-  background: #1ebe5c;
-}
-
-/* -------------------- CHAT -------------------- */
+/* CHAT: pantalla completa dentro del app-inner */
 #chat {
   width: 100%;
-  max-width: 450px;
+  height: 100%;
   background: #f7f7f7;
-  border-radius: 16px;
+  display: none;              /* se muestra al loguear */
+  flex-direction: column;
   overflow: hidden;
-  display: none;
-  box-shadow: 0 0 25px rgba(0,0,0,0.2);
 }
 
-/* HEADER */
+/* HEADER FIJO ARRIBA */
 #chat-header {
   background: linear-gradient(135deg, #075e54, #128c7e);
   color: white;
-  padding: 18px;
+  padding: 16px;
   text-align: center;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
-  letter-spacing: 0.5px;
+  flex-shrink: 0;
 }
 
 /* CONTROLES */
 #chat-controls {
   display: flex;
-  gap: 10px;
-  padding: 10px;
+  gap: 8px;
+  padding: 8px;
   background: #ece5dd;
+  flex-shrink: 0;
 }
 
 #chat-controls button {
   flex: 1;
-  padding: 10px;
+  padding: 8px;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   background: #128c7e;
   color: white;
+  font-size: 14px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-#chat-controls button:hover {
-  background: #0d6f63;
+/* ÁREA DE MENSAJES: OCUPA TODO EL ESPACIO DISPONIBLE */
+#messages {
+  flex: 1;                     /* clave: ocupa el resto del alto */
+  overflow-y: auto;
+  padding: 10px;
+  background: #e5ddd5;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* MENSAJES */
-#messages {
-  height: 350px;
-  overflow-y: auto;
-  padding: 15px;
-  background: #e5ddd5;
-}
-
 .msg {
-  padding: 10px 14px;
-  margin: 8px 0;
+  padding: 8px 12px;
+  margin: 6px 0;
   border-radius: 14px;
-  max-width: 75%;
+  max-width: 80%;
   word-wrap: break-word;
   font-size: 15px;
-  position: relative;
-  animation: fadeIn 0.2s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .me {
   background: #dcf8c6;
   margin-left: auto;
   border-bottom-right-radius: 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
 
 .other {
   background: white;
   margin-right: auto;
   border-bottom-left-radius: 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
 
-/* INPUT */
+.msg img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* INPUT FIJO ABAJO */
 #input-area {
-  padding: 10px;
+  padding: 8px;
   background: #f0f0f0;
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+#input-area button {
+  border: none;
+  border-radius: 999px;
+  background: #25d366;
+  color: white;
+  font-size: 18px;
+  padding: 8px 12px;
+  cursor: pointer;
 }
 
 #text {
   flex: 1;
-  padding: 12px;
+  padding: 10px;
   border-radius: 20px;
   border: 1px solid #ccc;
-}
-
-#input-area button {
-  padding: 12px 18px;
-  border: none;
-  border-radius: 50%;
-  background: #25d366;
-  color: white;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-#input-area button:hover {
-  background: #1ebe5c;
+  font-size: 15px;
 }
 
 /* EMOJIS */
 #emoji-box {
-  margin-top: 5px;
   max-height: 120px;
   overflow-y: auto;
   border: 1px solid #ccc;
@@ -184,6 +167,7 @@ body {
   display: none;
   background: white;
   border-radius: 10px;
+  flex-shrink: 0;
 }
 
 #emoji-box span {
@@ -195,36 +179,74 @@ body {
 
 /* STICKERS */
 #stickers {
-  padding: 10px;
+  padding: 8px;
   background: #ece5dd;
+  flex-shrink: 0;
 }
 
 #stickers img {
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
   object-fit: contain;
   cursor: pointer;
-  margin-right: 5px;
-  transition: 0.2s;
+  margin-right: 6px;
 }
 
-#stickers img:hover {
-  transform: scale(1.1);
+/* LOGIN inputs/botones */
+#login h2 {
+  text-align: center;
+  margin-bottom: 15px;
 }
 
-/* RESPONSIVE */
-@media (max-width: 480px) {
-  body {
-    padding: 0;
-  }
+#login label {
+  font-size: 14px;
+  margin-top: 8px;
+}
 
-  #chat {
-    border-radius: 0;
+#login input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 4px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+#login button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #25d366;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* Modo oscuro básico */
+.dark {
+  background: #121212;
+  color: #eee;
+}
+
+.dark #chat {
+  background: #202020;
+}
+
+.dark #messages {
+  background: #181818;
+}
+
+/* RESPONSIVE: en móviles ocupa el 100% de ancho sin hacerse pequeño */
+@media (max-width: 600px) {
+  .app-inner {
     max-width: 100%;
+    height: 100vh;
   }
 
-  #messages {
-    height: 70vh;
+  #login, #chat {
+    height: 100vh;
   }
 }
 </style>
@@ -232,72 +254,77 @@ body {
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login">
-  <h2 style="text-align:center; margin-bottom:15px;">Iniciar sesión</h2>
+<div id="app">
+  <div class="app-inner">
 
-  <label>Usuario:</label>
-  <input id="user">
+    <!-- LOGIN -->
+    <div id="login">
+      <h2>Iniciar sesión</h2>
 
-  <label>Contraseña:</label>
-  <input id="pass" type="password">
+      <label>Usuario:</label>
+      <input id="user">
 
-  <button onclick="login()">Entrar</button>
-  <button onclick="guardarSesion()" style="background:#128c7e;">Guardar sesión</button>
+      <label>Contraseña:</label>
+      <input id="pass" type="password">
 
-  <p id="error" style="color:red; margin-top:10px;"></p>
+      <button onclick="login()">Entrar</button>
+      <button onclick="guardarSesion()" style="background:#128c7e;">Guardar sesión</button>
+
+      <p id="error" style="color:red; margin-top:10px;"></p>
+    </div>
+
+    <!-- CHAT -->
+    <div id="chat">
+
+      <div id="chat-header">Chat privado</div>
+
+      <div id="chat-controls">
+        <button onclick="toggleDark()">Modo oscuro</button>
+        <button onclick="cerrarSesion()">Cerrar sesión</button>
+        <button onclick="borrarChat()">Borrar chat</button>
+      </div>
+
+      <div id="messages"></div>
+
+      <div id="input-area">
+        <button type="button" onclick="toggleEmojiBox()">😀</button>
+        <input id="text" placeholder="Escribe un mensaje" onkeydown="if(event.key==='Enter'){sendMsg()}">
+        <button type="button" onclick="sendMsg()">➤</button>
+      </div>
+
+      <div id="emoji-box">
+        <span onclick="addEmoji('😀')">😀</span>
+        <span onclick="addEmoji('😁')">😁</span>
+        <span onclick="addEmoji('😂')">😂</span>
+        <span onclick="addEmoji('😍')">😍</span>
+        <span onclick="addEmoji('😎')">😎</span>
+        <span onclick="addEmoji('😭')">😭</span>
+        <span onclick="addEmoji('❤️')">❤️</span>
+        <span onclick="addEmoji('🔥')">🔥</span>
+        <span onclick="addEmoji('👍')">👍</span>
+        <span onclick="addEmoji('🙏')">🙏</span>
+      </div>
+
+      <input type="file" id="imgInput" accept="image/*" onchange="sendImage()" style="margin:8px;">
+
+      <div id="stickers">
+        <p>Stickers:</p>
+        <img src="https://i.imgur.com/0y8Ftya.png" onclick="sendSticker(this.src)">
+        <img src="https://i.imgur.com/n7zFfYQ.png" onclick="sendSticker(this.src)">
+        <img src="https://i.imgur.com/6g8J5oM.png" onclick="sendSticker(this.src)">
+      </div>
+
+    </div>
+
+  </div>
 </div>
 
-<!-- CHAT -->
-<div id="chat">
-
-  <div id="chat-header">Chat privado</div>
-
-  <div id="chat-controls">
-    <button onclick="toggleDark()">Modo oscuro</button>
-    <button onclick="cerrarSesion()">Cerrar sesión</button>
-    <button onclick="borrarChat()">Borrar chat</button>
-  </div>
-
-  <div id="messages"></div>
-  <div id="typing" style="height:20px; font-style:italic; color:gray; padding-left:10px;"></div>
-
-  <div id="input-area">
-    <button onclick="toggleEmojiBox()">😀</button>
-    <input id="text" placeholder="Escribe un mensaje" oninput="typing()">
-    <button onclick="sendMsg()">➤</button>
-  </div>
-
-  <div id="emoji-box">
-    <span onclick="addEmoji('😀')">😀</span>
-    <span onclick="addEmoji('😁')">😁</span>
-    <span onclick="addEmoji('😂')">😂</span>
-    <span onclick="addEmoji('😍')">😍</span>
-    <span onclick="addEmoji('😎')">😎</span>
-    <span onclick="addEmoji('😭')">😭</span>
-    <span onclick="addEmoji('❤️')">❤️</span>
-    <span onclick="addEmoji('🔥')">🔥</span>
-    <span onclick="addEmoji('👍')">👍</span>
-    <span onclick="addEmoji('🙏')">🙏</span>
-  </div>
-
-  <input type="file" id="imgInput" accept="image/*" onchange="sendImage()" style="margin:10px;">
-
-  <div id="stickers">
-    <p>Stickers:</p>
-    <img src="https://i.imgur.com/0y8Ftya.png" onclick="sendSticker(this.src)">
-    <img src="https://i.imgur.com/n7zFfYQ.png" onclick="sendSticker(this.src)">
-    <img src="https://i.imgur.com/6g8J5oM.png" onclick="sendSticker(this.src)">
-  </div>
-
-</div>
-
-<!-- FIREBASE v8 (CLÁSICO, SIMPLE) -->
+<!-- FIREBASE v8 -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-// CONFIGURACIÓN REAL DE TU PROYECTO
+// CONFIGURACIÓN REAL
 var firebaseConfig = {
   apiKey: "AIzaSyDKDqtwCKtow3pRW1EndaHFNLaqDOhxm2M",
   authDomain: "chat-e5bd5.firebaseapp.com",
@@ -305,28 +332,24 @@ var firebaseConfig = {
   projectId: "chat-e5bd5",
   storageBucket: "chat-e5bd5.firebasestorage.app",
   messagingSenderId: "779788920246",
-  appId: "1:779788920246:web:5e8a14594826ed52448d17",
-  measurementId: "G-5V87HRRZV6"
+  appId: "1:779788920246:web:5e8a14594826ed52448d17"
 };
 
-// Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 
 let currentUser = null;
-let typingTimeout = null;
 
-/* -------------------- LOGIN -------------------- */
+/* LOGIN */
 function login() {
   const u = document.getElementById("user").value.trim();
   const p = document.getElementById("pass").value.trim();
-
   const userLower = u.toLowerCase();
 
   if ((userLower === "yoerlin" && p === "Jarabacoa01") ||
       (userLower === "yoeimy" && p === "Jesus777")) {
 
-    currentUser = u; // guarda el nombre tal como se escribió
+    currentUser = u;
     mostrarChat();
 
   } else {
@@ -337,7 +360,6 @@ function login() {
 function guardarSesion() {
   const u = document.getElementById("user").value.trim();
   const p = document.getElementById("pass").value.trim();
-
   const userLower = u.toLowerCase();
 
   if ((userLower === "yoerlin" && p === "Jarabacoa01") ||
@@ -351,7 +373,6 @@ function guardarSesion() {
   }
 }
 
-/* -------------------- INICIO -------------------- */
 window.onload = function() {
   const saved = localStorage.getItem("chatUser");
   if (saved) {
@@ -359,19 +380,17 @@ window.onload = function() {
     mostrarChat();
   }
 
-  // Escuchar mensajes en tiempo real
   db.ref("mensajes").on("child_added", function(snapshot) {
-    const msg = snapshot.val();
-    showMsg(msg);
+    showMsg(snapshot.val());
   });
 };
 
 function mostrarChat() {
   document.getElementById("login").style.display = "none";
-  document.getElementById("chat").style.display = "block";
+  document.getElementById("chat").style.display = "flex";
 }
 
-/* -------------------- CHAT FUNCIONES -------------------- */
+/* CHAT */
 function sendMsg() {
   const text = document.getElementById("text").value.trim();
   if (!text || !currentUser) return;
@@ -384,7 +403,6 @@ function sendMsg() {
   };
 
   db.ref("mensajes").push(msg);
-
   document.getElementById("text").value = "";
 }
 
@@ -423,13 +441,12 @@ function showMsg(msg) {
   const cont = document.getElementById("messages");
   const box = document.createElement("div");
 
-  // si el mensaje lo envió el usuario actual -> me, si no -> other
   box.className = "msg " + (msg.user === currentUser ? "me" : "other");
 
   if (msg.type === "text") {
     box.textContent = msg.text;
   } else {
-    box.innerHTML = '<img src="' + msg.text + '" width="150">';
+    box.innerHTML = '<img src="' + msg.text + '">';
   }
 
   cont.appendChild(box);
@@ -437,7 +454,7 @@ function showMsg(msg) {
 }
 
 function borrarChat() {
-  if (!confirm("¿Seguro que quieres borrar TODO el chat para ambos?")) return;
+  if (!confirm("¿Seguro que quieres borrar TODO el chat?")) return;
   db.ref("mensajes").remove();
   document.getElementById("messages").innerHTML = "";
 }
@@ -448,20 +465,10 @@ function cerrarSesion() {
   location.reload();
 }
 
-/* -------------------- UI EXTRA -------------------- */
 function addEmoji(e) {
   const input = document.getElementById("text");
   input.value += e;
   input.focus();
-}
-
-function typing() {
-  const typingDiv = document.getElementById("typing");
-  typingDiv.textContent = "Escribiendo...";
-  clearTimeout(typingTimeout);
-  typingTimeout = setTimeout(function() {
-    typingDiv.textContent = "";
-  }, 1000);
 }
 
 function toggleDark() {
@@ -472,6 +479,16 @@ function toggleEmojiBox() {
   const box = document.getElementById("emoji-box");
   box.style.display = (box.style.display === "none" || box.style.display === "") ? "block" : "none";
 }
+</script>
+
+<!-- FIX EXTRA PARA TECLADO EN MÓVILES -->
+<script>
+function fixHeight() {
+  document.body.style.height = window.innerHeight + "px";
+}
+window.addEventListener("resize", fixHeight);
+window.addEventListener("orientationchange", fixHeight);
+fixHeight();
 </script>
 
 </body>
