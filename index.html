@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Chat privado</title>
+
+<style>
+/* -------------------- RESET -------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* -------------------- BODY -------------------- */
+body {
+  background: #d9d9d9;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.dark {
+  background: #1a1a1a;
+  color: #eee;
+}
+
+/* -------------------- LOGIN -------------------- */
+#login {
+  width: 100%;
+  max-width: 350px;
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.15);
+}
+
+#login input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+#login button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #25d366;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#login button:hover {
+  background: #1ebe5c;
+}
+
+/* -------------------- CHAT -------------------- */
+#chat {
+  width: 100%;
+  max-width: 450px;
+  background: #f7f7f7;
+  border-radius: 16px;
+  overflow: hidden;
+  display: none;
+  box-shadow: 0 0 25px rgba(0,0,0,0.2);
+}
+
+/* HEADER */
+#chat-header {
+  background: linear-gradient(135deg, #075e54, #128c7e);
+  color: white;
+  padding: 18px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+/* CONTROLES */
+#chat-controls {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  background: #ece5dd;
+}
+
+#chat-controls button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #128c7e;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#chat-controls button:hover {
+  background: #0d6f63;
+}
+
+/* MENSAJES */
+#messages {
+  height: 350px;
+  overflow-y: auto;
+  padding: 15px;
+  background: #e5ddd5;
+}
+
+.msg {
+  padding: 10px 14px;
+  margin: 8px 0;
+  border-radius: 14px;
+  max-width: 75%;
+  word-wrap: break-word;
+  font-size: 15px;
+  position: relative;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.me {
+  background: #dcf8c6;
+  margin-left: auto;
+  border-bottom-right-radius: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.other {
+  background: white;
+  margin-right: auto;
+  border-bottom-left-radius: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* INPUT */
+#input-area {
+  padding: 10px;
+  background: #f0f0f0;
+  display: flex;
+  gap: 10px;
+}
+
+#text {
+  flex: 1;
+  padding: 12px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
+
+#input-area button {
+  padding: 12px 18px;
+  border: none;
+  border-radius: 50%;
+  background: #25d366;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#input-area button:hover {
+  background: #1ebe5c;
+}
+
+/* EMOJIS */
+#emoji-box {
+  margin-top: 5px;
+  max-height: 120px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 5px;
+  display: none;
+  background: white;
+  border-radius: 10px;
+}
+
+#emoji-box span {
+  cursor: pointer;
+  font-size: 22px;
+  margin: 4px;
+  display: inline-block;
+}
+
+/* STICKERS */
+#stickers {
+  padding: 10px;
+  background: #ece5dd;
+}
+
+#stickers img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: 0.2s;
+}
+
+#stickers img:hover {
+  transform: scale(1.1);
+}
+
+/* RESPONSIVE */
+@media (max-width: 480px) {
+  body {
+    padding: 0;
+  }
+
+  #chat {
+    border-radius: 0;
+    max-width: 100%;
+  }
+
+  #messages {
+    height: 70vh;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <h2 style="text-align:center; margin-bottom:15px;">Iniciar sesión</h2>
+
+  <label>Usuario:</label>
+  <input id="user">
+
+  <label>Contraseña:</label>
+  <input id="pass" type="password">
+
+  <button onclick="login()">Entrar</button>
+  <button onclick="guardarSesion()" style="background:#128c7e;">Guardar sesión</button>
+
+  <p id="error" style="color:red; margin-top:10px;"></p>
+</div>
+
+<!-- CHAT -->
+<div id="chat">
+
+  <div id="chat-header">Chat privado</div>
+
+  <div id="chat-controls">
+    <button onclick="toggleDark()">Modo oscuro</button>
+    <button onclick="cerrarSesion()">Cerrar sesión</button>
+    <button onclick="borrarChat()">Borrar chat</button>
+  </div>
+
+  <div id="messages"></div>
+  <div id="typing" style="height:20px; font-style:italic; color:gray; padding-left:10px;"></div>
+
+  <div id="input-area">
+    <button onclick="toggleEmojiBox()">😀</button>
+    <input id="text" placeholder="Escribe un mensaje" oninput="typing()">
+    <button onclick="sendMsg()">➤</button>
+  </div>
+
+  <div id="emoji-box">
+    <span onclick="addEmoji('😀')">😀</span>
+    <span onclick="addEmoji('😁')">😁</span>
+    <span onclick="addEmoji('😂')">😂</span>
+    <span onclick="addEmoji('😍')">😍</span>
+    <span onclick="addEmoji('😎')">😎</span>
+    <span onclick="addEmoji('😭')">😭</span>
+    <span onclick="addEmoji('❤️')">❤️</span>
+    <span onclick="addEmoji('🔥')">🔥</span>
+    <span onclick="addEmoji('👍')">👍</span>
+    <span onclick="addEmoji('🙏')">🙏</span>
+  </div>
+
+  <input type="file" id="imgInput" accept="image/*" onchange="sendImage()" style="margin:10px;">
+
+  <div id="stickers">
+    <p>Stickers:</p>
+    <img src="https://i.imgur.com/0y8Ftya.png" onclick="sendSticker(this.src)">
+    <img src="https://i.imgur.com/n7zFfYQ.png" onclick="sendSticker(this.src)">
+    <img src="https://i.imgur.com/6g8J5oM.png" onclick="sendSticker(this.src)">
+  </div>
+
+</div>
+
+<!-- FIREBASE v8 (CLÁSICO, SIMPLE) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+// CONFIGURACIÓN REAL DE TU PROYECTO
+var firebaseConfig = {
+  apiKey: "AIzaSyDKDqtwCKtow3pRW1EndaHFNLaqDOhxm2M",
+  authDomain: "chat-e5bd5.firebaseapp.com",
+  databaseURL: "https://chat-e5bd5-default-rtdb.firebaseio.com",
+  projectId: "chat-e5bd5",
+  storageBucket: "chat-e5bd5.firebasestorage.app",
+  messagingSenderId: "779788920246",
+  appId: "1:779788920246:web:5e8a14594826ed52448d17",
+  measurementId: "G-5V87HRRZV6"
+};
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+var db = firebase.database();
+
+let currentUser = null;
+let typingTimeout = null;
+
+/* -------------------- LOGIN -------------------- */
+function login() {
+  const u = document.getElementById("user").value.trim();
+  const p = document.getElementById("pass").value.trim();
+
+  const userLower = u.toLowerCase();
+
+  if ((userLower === "yoerlin" && p === "Jarabacoa01") ||
+      (userLower === "yoeimy" && p === "Jesus777")) {
+
+    currentUser = u; // guarda el nombre tal como se escribió
+    mostrarChat();
+
+  } else {
+    document.getElementById("error").textContent = "Credenciales incorrectas";
+  }
+}
+
+function guardarSesion() {
+  const u = document.getElementById("user").value.trim();
+  const p = document.getElementById("pass").value.trim();
+
+  const userLower = u.toLowerCase();
+
+  if ((userLower === "yoerlin" && p === "Jarabacoa01") ||
+      (userLower === "yoeimy" && p === "Jesus777")) {
+
+    localStorage.setItem("chatUser", u);
+    alert("Sesión guardada");
+
+  } else {
+    alert("Credenciales incorrectas");
+  }
+}
+
+/* -------------------- INICIO -------------------- */
+window.onload = function() {
+  const saved = localStorage.getItem("chatUser");
+  if (saved) {
+    currentUser = saved;
+    mostrarChat();
+  }
+
+  // Escuchar mensajes en tiempo real
+  db.ref("mensajes").on("child_added", function(snapshot) {
+    const msg = snapshot.val();
+    showMsg(msg);
+  });
+};
+
+function mostrarChat() {
+  document.getElementById("login").style.display = "none";
+  document.getElementById("chat").style.display = "block";
+}
+
+/* -------------------- CHAT FUNCIONES -------------------- */
+function sendMsg() {
+  const text = document.getElementById("text").value.trim();
+  if (!text || !currentUser) return;
+
+  const msg = {
+    user: currentUser,
+    text: text,
+    time: new Date().toLocaleTimeString(),
+    type: "text"
+  };
+
+  db.ref("mensajes").push(msg);
+
+  document.getElementById("text").value = "";
+}
+
+function sendImage() {
+  const file = document.getElementById("imgInput").files[0];
+  if (!file || !currentUser) return;
+
+  const reader = new FileReader();
+  reader.onload = function() {
+    const msg = {
+      user: currentUser,
+      text: reader.result,
+      time: new Date().toLocaleTimeString(),
+      type: "image"
+    };
+
+    db.ref("mensajes").push(msg);
+  };
+  reader.readAsDataURL(file);
+}
+
+function sendSticker(url) {
+  if (!currentUser) return;
+
+  const msg = {
+    user: currentUser,
+    text: url,
+    time: new Date().toLocaleTimeString(),
+    type: "image"
+  };
+
+  db.ref("mensajes").push(msg);
+}
+
+function showMsg(msg) {
+  const cont = document.getElementById("messages");
+  const box = document.createElement("div");
+
+  // si el mensaje lo envió el usuario actual -> me, si no -> other
+  box.className = "msg " + (msg.user === currentUser ? "me" : "other");
+
+  if (msg.type === "text") {
+    box.textContent = msg.text;
+  } else {
+    box.innerHTML = '<img src="' + msg.text + '" width="150">';
+  }
+
+  cont.appendChild(box);
+  cont.scrollTop = cont.scrollHeight;
+}
+
+function borrarChat() {
+  if (!confirm("¿Seguro que quieres borrar TODO el chat para ambos?")) return;
+  db.ref("mensajes").remove();
+  document.getElementById("messages").innerHTML = "";
+}
+
+function cerrarSesion() {
+  localStorage.removeItem("chatUser");
+  currentUser = null;
+  location.reload();
+}
+
+/* -------------------- UI EXTRA -------------------- */
+function addEmoji(e) {
+  const input = document.getElementById("text");
+  input.value += e;
+  input.focus();
+}
+
+function typing() {
+  const typingDiv = document.getElementById("typing");
+  typingDiv.textContent = "Escribiendo...";
+  clearTimeout(typingTimeout);
+  typingTimeout = setTimeout(function() {
+    typingDiv.textContent = "";
+  }, 1000);
+}
+
+function toggleDark() {
+  document.body.classList.toggle("dark");
+}
+
+function toggleEmojiBox() {
+  const box = document.getElementById("emoji-box");
+  box.style.display = (box.style.display === "none" || box.style.display === "") ? "block" : "none";
+}
+</script>
+
+</body>
+</html>
