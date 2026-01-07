@@ -3,8 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Chat privado</title>
-
-<!-- Para que se vea como app en el teléfono -->
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <style>
@@ -12,38 +10,47 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Segoe UI", Arial, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 html, body {
   height: 100%;
   width: 100%;
   overflow: hidden;
-  background: #111;
-  touch-action: manipulation;
+  background: radial-gradient(circle at top, #1f2933 0, #050608 50%, #000 100%);
+  color: #111;
 }
 
+/* CONTENEDOR PRINCIPAL */
 #app {
   height: 100vh;
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: stretch;
+  align-items: center;
+  padding: 10px;
 }
 
 .app-inner {
   width: 100%;
-  max-width: 480px;
-  height: 100vh;
-  background: #d9d9d9;
+  max-width: 520px;
+  height: 100%;
+  max-height: 860px;
+  background: #f4f5f7;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow:
+    0 25px 60px rgba(0,0,0,0.50),
+    0 0 0 1px rgba(255,255,255,0.04);
+  display: flex;
+  flex-direction: column;
 }
 
 /* LOGIN */
 #login {
-  width: 100%;
-  height: 100%;
-  background: white;
-  padding: 25px;
+  flex: 1;
+  background: linear-gradient(145deg, #f9fafb 0%, #e5ecf4 50%, #dde7f2 100%);
+  padding: 28px 22px 24px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -51,185 +58,238 @@ html, body {
 
 #login h2 {
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 6px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+#login .subtitle {
+  text-align: center;
+  margin-bottom: 22px;
+  font-size: 13px;
+  color: #6b7280;
 }
 
 #login label {
-  font-size: 14px;
-  margin-top: 8px;
+  font-size: 13px;
+  margin-top: 10px;
+  color: #374151;
 }
 
 #login input {
   width: 100%;
-  padding: 10px;
+  padding: 10px 12px;
   margin-top: 4px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 15px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  background: rgba(255,255,255,0.9);
 }
 
 #login button {
   width: 100%;
   padding: 10px;
-  margin-top: 10px;
+  margin-top: 12px;
   border: none;
-  border-radius: 8px;
-  background: #25d366;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #10b981, #059669);
   color: white;
-  font-size: 15px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
+}
+
+#login button.secondary {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+#login p#error {
+  min-height: 18px;
+  font-size: 12px;
+}
+
+#login .e2ee-note {
+  margin-top: 16px;
+  font-size: 11px;
+  color: #9ca3af;
+  text-align: center;
 }
 
 /* CHAT */
 #chat {
+  flex: 1;
   width: 100%;
-  height: 100%;
-  background: #f7f7f7;
+  background: #f3f4f6;
   display: none;
   flex-direction: column;
-  overflow: hidden;
 }
 
 /* HEADER */
 #chat-header {
-  background: linear-gradient(135deg, #075e54, #128c7e);
+  background: linear-gradient(135deg, #0f172a, #0f766e);
   color: white;
-  padding: 16px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-  flex-shrink: 0;
+  padding: 14px 16px 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 24px rgba(15,23,42,0.6);
+}
+
+.header-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 20%, #6ee7b7, #0f766e);
+  box-shadow: 0 0 0 2px rgba(15,23,42,0.7);
+}
+
+.header-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.header-subtitle {
+  font-size: 11px;
+  color: #a7f3d0;
 }
 
 /* CONTROLES */
 #chat-controls {
   display: flex;
   gap: 8px;
-  padding: 8px;
-  background: #ece5dd;
-  flex-shrink: 0;
+  padding: 8px 10px;
+  background: #e5e7eb;
+  border-bottom: 1px solid rgba(148,163,184,0.4);
 }
 
 #chat-controls button {
   flex: 1;
-  padding: 8px;
+  padding: 7px 6px;
   border: none;
-  border-radius: 8px;
-  background: #128c7e;
-  color: white;
-  font-size: 14px;
+  border-radius: 999px;
+  background: #111827;
+  color: #e5e7eb;
+  font-size: 12px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+#chat-controls button svg {
+  width: 16px;
+  height: 16px;
+  fill: #e5e7eb;
 }
 
 /* MENSAJES */
 #messages {
   flex: 1;
   overflow-y: auto;
-  padding: 10px;
-  background: #e5ddd5;
-  -webkit-overflow-scrolling: touch;
+  padding: 12px 10px 10px;
+  background: radial-gradient(circle at top, #e5e7eb 0, #d1d5db 35%, #9ca3af 100%);
+}
+
+.msg-row {
+  width: 100%;
+  display: flex;
 }
 
 .msg {
-  padding: 8px 12px;
-  margin: 6px 0;
-  border-radius: 14px;
-  max-width: 80%;
-  word-wrap: break-word;
-  font-size: 15px;
+  padding: 8px 11px 4px;
+  margin: 4px 0;
+  border-radius: 18px;
+  max-width: 78%;
+  font-size: 14px;
+  line-height: 1.35;
+  animation: msgIn 0.16s ease-out;
+}
+
+@keyframes msgIn {
+  from { transform: translateY(4px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .me {
-  background: #dcf8c6;
+  background: linear-gradient(135deg, #bbf7d0, #6ee7b7);
   margin-left: auto;
-  border-bottom-right-radius: 0;
 }
 
 .other {
   background: white;
   margin-right: auto;
-  border-bottom-left-radius: 0;
 }
 
-.msg img {
+.msg img,
+.msg video {
   max-width: 100%;
-  height: auto;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
-/* INPUT */
+.msg a {
+  color: #0645AD;
+  font-size: 13px;
+}
+
+.msg-meta {
+  font-size: 10px;
+  opacity: 0.7;
+  margin-top: 3px;
+  text-align: right;
+}
+
+/* INPUT AREA */
 #input-area {
-  padding: 8px;
-  background: #f0f0f0;
+  padding: 8px 10px 10px;
+  background: #e5e7eb;
   display: flex;
   gap: 8px;
-  flex-shrink: 0;
-}
-
-#input-area button {
-  border: none;
-  border-radius: 999px;
-  background: #25d366;
-  color: white;
-  font-size: 18px;
-  padding: 8px 12px;
-  cursor: pointer;
+  align-items: center;
+  border-top: 1px solid rgba(148,163,184,0.6);
 }
 
 #text {
   flex: 1;
-  padding: 10px;
+  padding: 10px 12px;
   border-radius: 20px;
-  border: 1px solid #ccc;
-  font-size: 15px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  background: #f9fafb;
 }
 
-/* EMOJIS */
-#emoji-box {
-  max-height: 120px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  padding: 5px;
-  display: none;
-  background: white;
-  border-radius: 10px;
-  flex-shrink: 0;
+.btn-plus,
+.btn-send {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-#emoji-box span {
-  cursor: pointer;
-  font-size: 22px;
-  margin: 4px;
-  display: inline-block;
+.btn-plus svg,
+.btn-send svg {
+  width: 20px;
+  height: 20px;
+  fill: #e5e7eb;
 }
 
-/* Modo oscuro básico */
-.dark {
-  background: #121212;
-  color: #eee;
-}
+/* MODO OSCURO */
+.dark .app-inner { background: #020617; }
+.dark #chat { background: #020617; }
+.dark #messages { background: #020617; }
+.dark .me { background: #15803d; color: white; }
+.dark .other { background: #1e293b; color: white; }
+.dark #input-area { background: #020617; }
+.dark #text { background: #020617; color: white; border-color: #1f2937; }
+.dark #chat-controls { background: #020617; }
+.dark #chat-controls button { background: #1e293b; }
 
-.dark #chat {
-  background: #202020;
-}
-
-.dark #messages {
-  background: #181818;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .app-inner {
-    max-width: 100%;
-    height: 100vh;
-  }
-
-  #login, #chat {
-    height: 100vh;
-  }
-}
 </style>
-
 </head>
 <body>
 
@@ -238,71 +298,83 @@ html, body {
 
     <!-- LOGIN -->
     <div id="login">
-      <h2>Iniciar sesión (cifrado de extremo a extremo)</h2>
+      <h2>Chat privado cifrado</h2>
+      <div class="subtitle">Cifrado de extremo a extremo activo</div>
 
-      <label>Usuario:</label>
-      <input id="user">
+      <label>Usuario</label>
+      <input id="user" autocomplete="username">
 
-      <label>Contraseña:</label>
-      <input id="pass" type="password">
+      <label>Contraseña</label>
+      <input id="pass" type="password" autocomplete="current-password">
 
-      <label>Clave secreta del chat:</label>
-      <input id="secret" type="password" placeholder="La misma clave en ambos dispositivos">
+      <label>Clave secreta del chat</label>
+      <input id="secret" type="password">
 
       <button onclick="login()">Entrar</button>
-      <button onclick="guardarSesion()" style="background:#128c7e;">Guardar sesión</button>
+      <button class="secondary" onclick="guardarSesion()">Guardar sesión</button>
 
-      <p id="error" style="color:red; margin-top:10px;"></p>
+      <p id="error" style="color:#dc2626; margin-top:10px; font-size:12px;"></p>
+
+      <p class="e2ee-note">cifrado de extremo a extremo</p>
     </div>
 
     <!-- CHAT -->
     <div id="chat">
 
-      <div id="chat-header">Chat privado cifrado</div>
+      <div id="chat-header">
+        <div class="header-avatar"></div>
+        <div>
+          <div class="header-title">Chat privado</div>
+          <div class="header-subtitle">Cifrado activo</div>
+        </div>
+      </div>
 
       <div id="chat-controls">
-        <button onclick="toggleDark()">Modo oscuro</button>
-        <button onclick="cerrarSesion()">Cerrar sesión</button>
-        <button onclick="borrarChat()">Borrar chat</button>
+        <button onclick="toggleDark()">
+          <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18 9 9 0 0 1 0-18z"/></svg>
+          Modo oscuro
+        </button>
+        <button onclick="cerrarSesion()">
+          <svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5v10zM4 4h6v2H6v12h4v2H4V4z"/></svg>
+          Salir
+        </button>
+        <button onclick="borrarChat()">
+          <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6v12m8-12v12M5 6l1 14h12l1-14"/></svg>
+          Limpiar
+        </button>
       </div>
 
       <div id="messages"></div>
 
       <div id="input-area">
-        <button type="button" onclick="toggleEmojiBox()">😀</button>
-        <input id="text" placeholder="Escribe un mensaje" onkeydown="if(event.key==='Enter'){sendMsg()}">
-        <button type="button" onclick="sendMsg()">➤</button>
+        <button class="btn-plus" onclick="document.getElementById('fileInput').click()">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14m7-7H5"/></svg>
+        </button>
+
+        <input id="text" placeholder="Escribe un mensaje"
+               onkeydown="if(event.key==='Enter'){sendMsg()}">
+
+        <button class="btn-send" onclick="sendMsg()">
+          <svg viewBox="0 0 24 24"><path d="M4 4l16 8-16 8 4-8-4-8z"/></svg>
+        </button>
       </div>
 
-      <div id="emoji-box">
-        <span onclick="addEmoji('😀')">😀</span>
-        <span onclick="addEmoji('😁')">😁</span>
-        <span onclick="addEmoji('😂')">😂</span>
-        <span onclick="addEmoji('😍')">😍</span>
-        <span onclick="addEmoji('😎')">😎</span>
-        <span onclick="addEmoji('😭')">😭</span>
-        <span onclick="addEmoji('❤️')">❤️</span>
-        <span onclick="addEmoji('🔥')">🔥</span>
-        <span onclick="addEmoji('👍')">👍</span>
-        <span onclick="addEmoji('🙏')">🙏</span>
-      </div>
-
-      <input type="file" id="imgInput" accept="image/*" onchange="sendImage()" style="margin:8px;">
+      <input type="file" id="fileInput"
+             accept="image/*,video/*,.pdf,.txt,.doc,.docx"
+             onchange="sendFile()" style="display:none;">
 
     </div>
 
   </div>
 </div>
 
-<!-- Librería para cifrado AES -->
+<!-- LIBRERÍAS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-
-<!-- FIREBASE v8 -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-// CONFIGURACIÓN FIREBASE
+// CONFIG FIREBASE
 var firebaseConfig = {
   apiKey: "AIzaSyDKDqtwCKtow3pRW1EndaHFNLaqDOhxm2M",
   authDomain: "chat-e5bd5.firebaseapp.com",
@@ -317,7 +389,8 @@ firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 
 let currentUser = null;
-let SECRET_KEY = null; // se pone al iniciar sesión
+let SECRET_KEY = null;
+let listenerAttached = false;
 
 /* LOGIN */
 function login() {
@@ -336,11 +409,11 @@ function login() {
 
     currentUser = u;
     SECRET_KEY = s;
-
+    document.getElementById("error").textContent = "";
     mostrarChat();
 
   } else {
-    document.getElementById("error").textContent = "Credenciales incorrectas";
+    document.getElementById("error").textContent = "Credenciales incorrectas.";
   }
 }
 
@@ -360,13 +433,14 @@ function guardarSesion() {
 
     localStorage.setItem("chatUser", u);
     localStorage.setItem("chatSecret", s);
-    alert("Sesión guardada en este dispositivo.");
+    alert("Sesión guardada.");
 
   } else {
-    alert("Credenciales incorrectas");
+    alert("Credenciales incorrectas.");
   }
 }
 
+/* AUTO LOGIN */
 window.onload = function() {
   const savedUser = localStorage.getItem("chatUser");
   const savedSecret = localStorage.getItem("chatSecret");
@@ -376,23 +450,28 @@ window.onload = function() {
     SECRET_KEY = savedSecret;
     mostrarChat();
   }
-
-  db.ref("mensajes").on("child_added", function(snapshot) {
-    showMsg(snapshot.val());
-  });
 };
 
 function mostrarChat() {
   document.getElementById("login").style.display = "none";
   document.getElementById("chat").style.display = "flex";
+  iniciarEscuchaMensajes();
 }
 
-/* CHAT CON CIFRADO */
+/* ESCUCHAR MENSAJES */
+function iniciarEscuchaMensajes() {
+  if (listenerAttached) return;
+  db.ref("mensajes").on("child_added", function(snapshot) {
+    showMsg(snapshot.val());
+  });
+  listenerAttached = true;
+}
+
+/* ENVIAR TEXTO */
 function sendMsg() {
   const text = document.getElementById("text").value.trim();
   if (!text || !currentUser || !SECRET_KEY) return;
 
-  // Cifrar texto
   const encrypted = CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
 
   const msg = {
@@ -406,8 +485,9 @@ function sendMsg() {
   document.getElementById("text").value = "";
 }
 
-function sendImage() {
-  const file = document.getElementById("imgInput").files[0];
+/* ENVIAR ARCHIVOS */
+function sendFile() {
+  const file = document.getElementById("fileInput").files[0];
   if (!file || !currentUser) return;
 
   const reader = new FileReader();
@@ -416,7 +496,8 @@ function sendImage() {
       user: currentUser,
       text: reader.result,
       time: new Date().toLocaleTimeString(),
-      type: "image"
+      type: "file",
+      filename: file.name
     };
 
     db.ref("mensajes").push(msg);
@@ -424,37 +505,62 @@ function sendImage() {
   reader.readAsDataURL(file);
 }
 
+/* MOSTRAR MENSAJES */
 function showMsg(msg) {
   const cont = document.getElementById("messages");
-  const box = document.createElement("div");
+  const row = document.createElement("div");
+  row.className = "msg-row";
 
+  const box = document.createElement("div");
   box.className = "msg " + (msg.user === currentUser ? "me" : "other");
 
   if (msg.type === "text") {
-    let finalText = msg.text;
+    let finalText = "";
 
-    if (SECRET_KEY) {
-      try {
-        const bytes = CryptoJS.AES.decrypt(msg.text, SECRET_KEY);
-        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-        finalText = decrypted || "[Mensaje cifrado con otra clave]";
-      } catch (e) {
-        finalText = "[Mensaje cifrado con otra clave]";
-      }
-    } else {
-      finalText = "[Clave secreta no establecida]";
+    try {
+      const bytes = CryptoJS.AES.decrypt(msg.text, SECRET_KEY);
+      finalText = bytes.toString(CryptoJS.enc.Utf8) || "[Mensaje cifrado]";
+    } catch {
+      finalText = "[Mensaje cifrado]";
     }
 
     box.textContent = finalText;
 
-  } else {
-    box.innerHTML = '<img src="' + msg.text + '">';
+  } else if (msg.type === "file") {
+    if (msg.text.startsWith("data:image")) {
+      const img = document.createElement("img");
+      img.src = msg.text;
+      img.alt = msg.filename || "imagen";
+      box.appendChild(img);
+    } else if (msg.text.startsWith("data:video")) {
+      const video = document.createElement("video");
+      video.controls = true;
+      video.style.maxWidth = "100%";
+      video.style.borderRadius = "12px";
+      const src = document.createElement("source");
+      src.src = msg.text;
+      video.appendChild(src);
+      box.appendChild(video);
+    } else {
+      const link = document.createElement("a");
+      link.href = msg.text;
+      link.download = msg.filename || "archivo";
+      link.textContent = msg.filename || "archivo";
+      box.appendChild(link);
+    }
   }
 
-  cont.appendChild(box);
+  const meta = document.createElement("div");
+  meta.className = "msg-meta";
+  meta.textContent = msg.time || "";
+  box.appendChild(meta);
+
+  row.appendChild(box);
+  cont.appendChild(row);
   cont.scrollTop = cont.scrollHeight;
 }
 
+/* OTRAS FUNCIONES */
 function borrarChat() {
   if (!confirm("¿Seguro que quieres borrar TODO el chat?")) return;
   db.ref("mensajes").remove();
@@ -466,27 +572,15 @@ function cerrarSesion() {
   localStorage.removeItem("chatSecret");
   currentUser = null;
   SECRET_KEY = null;
+  listenerAttached = false;
   location.reload();
-}
-
-function addEmoji(e) {
-  const input = document.getElementById("text");
-  input.value += e;
-  input.focus();
 }
 
 function toggleDark() {
   document.body.classList.toggle("dark");
 }
 
-function toggleEmojiBox() {
-  const box = document.getElementById("emoji-box");
-  box.style.display = (box.style.display === "none" || box.style.display === "") ? "block" : "none";
-}
-</script>
-
-<!-- Fix extra para teclado en móviles -->
-<script>
+/* FIX ALTO EN MÓVIL */
 function fixHeight() {
   document.body.style.height = window.innerHeight + "px";
 }
