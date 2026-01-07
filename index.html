@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Chat privado</title>
 
-<!-- Viewport para que NO se vea pequeño en móviles -->
+<!-- Para que se vea como app en el teléfono -->
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <style>
@@ -15,7 +15,6 @@
   font-family: "Segoe UI", Arial, sans-serif;
 }
 
-/* El body siempre ocupa la pantalla completa */
 html, body {
   height: 100%;
   width: 100%;
@@ -24,8 +23,6 @@ html, body {
   touch-action: manipulation;
 }
 
-/* Contenedor general que centra el chat/log-in en pantallas grandes,
-   pero en móvil ocupa toda la pantalla */
 #app {
   height: 100vh;
   width: 100%;
@@ -34,15 +31,14 @@ html, body {
   align-items: stretch;
 }
 
-/* Contenedor del contenido (login o chat) */
 .app-inner {
   width: 100%;
-  max-width: 480px;      /* ancho máximo en PC/tablet */
-  height: 100vh;         /* SIEMPRE pantalla completa */
+  max-width: 480px;
+  height: 100vh;
   background: #d9d9d9;
 }
 
-/* LOGIN: pantalla completa dentro del app-inner */
+/* LOGIN */
 #login {
   width: 100%;
   height: 100%;
@@ -53,17 +49,48 @@ html, body {
   justify-content: center;
 }
 
-/* CHAT: pantalla completa dentro del app-inner */
+#login h2 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+#login label {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+#login input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 4px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+#login button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #25d366;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* CHAT */
 #chat {
   width: 100%;
   height: 100%;
   background: #f7f7f7;
-  display: none;              /* se muestra al loguear */
+  display: none;
   flex-direction: column;
   overflow: hidden;
 }
 
-/* HEADER FIJO ARRIBA */
+/* HEADER */
 #chat-header {
   background: linear-gradient(135deg, #075e54, #128c7e);
   color: white;
@@ -94,16 +121,15 @@ html, body {
   cursor: pointer;
 }
 
-/* ÁREA DE MENSAJES: OCUPA TODO EL ESPACIO DISPONIBLE */
+/* MENSAJES */
 #messages {
-  flex: 1;                     /* clave: ocupa el resto del alto */
+  flex: 1;
   overflow-y: auto;
   padding: 10px;
   background: #e5ddd5;
   -webkit-overflow-scrolling: touch;
 }
 
-/* MENSAJES */
 .msg {
   padding: 8px 12px;
   margin: 6px 0;
@@ -131,7 +157,7 @@ html, body {
   border-radius: 10px;
 }
 
-/* INPUT FIJO ABAJO */
+/* INPUT */
 #input-area {
   padding: 8px;
   background: #f0f0f0;
@@ -177,53 +203,6 @@ html, body {
   display: inline-block;
 }
 
-/* STICKERS */
-#stickers {
-  padding: 8px;
-  background: #ece5dd;
-  flex-shrink: 0;
-}
-
-#stickers img {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
-  cursor: pointer;
-  margin-right: 6px;
-}
-
-/* LOGIN inputs/botones */
-#login h2 {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-#login label {
-  font-size: 14px;
-  margin-top: 8px;
-}
-
-#login input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 4px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-}
-
-#login button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 8px;
-  background: #25d366;
-  color: white;
-  font-size: 15px;
-  cursor: pointer;
-}
-
 /* Modo oscuro básico */
 .dark {
   background: #121212;
@@ -238,7 +217,7 @@ html, body {
   background: #181818;
 }
 
-/* RESPONSIVE: en móviles ocupa el 100% de ancho sin hacerse pequeño */
+/* Responsive */
 @media (max-width: 600px) {
   .app-inner {
     max-width: 100%;
@@ -259,13 +238,16 @@ html, body {
 
     <!-- LOGIN -->
     <div id="login">
-      <h2>Iniciar sesión</h2>
+      <h2>Iniciar sesión (cifrado de extremo a extremo)</h2>
 
       <label>Usuario:</label>
       <input id="user">
 
       <label>Contraseña:</label>
       <input id="pass" type="password">
+
+      <label>Clave secreta del chat:</label>
+      <input id="secret" type="password" placeholder="La misma clave en ambos dispositivos">
 
       <button onclick="login()">Entrar</button>
       <button onclick="guardarSesion()" style="background:#128c7e;">Guardar sesión</button>
@@ -276,7 +258,7 @@ html, body {
     <!-- CHAT -->
     <div id="chat">
 
-      <div id="chat-header">Chat privado</div>
+      <div id="chat-header">Chat privado cifrado</div>
 
       <div id="chat-controls">
         <button onclick="toggleDark()">Modo oscuro</button>
@@ -307,24 +289,20 @@ html, body {
 
       <input type="file" id="imgInput" accept="image/*" onchange="sendImage()" style="margin:8px;">
 
-      <div id="stickers">
-        <p>Stickers:</p>
-        <img src="https://i.imgur.com/0y8Ftya.png" onclick="sendSticker(this.src)">
-        <img src="https://i.imgur.com/n7zFfYQ.png" onclick="sendSticker(this.src)">
-        <img src="https://i.imgur.com/6g8J5oM.png" onclick="sendSticker(this.src)">
-      </div>
-
     </div>
 
   </div>
 </div>
+
+<!-- Librería para cifrado AES -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
 <!-- FIREBASE v8 -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-// CONFIGURACIÓN REAL
+// CONFIGURACIÓN FIREBASE
 var firebaseConfig = {
   apiKey: "AIzaSyDKDqtwCKtow3pRW1EndaHFNLaqDOhxm2M",
   authDomain: "chat-e5bd5.firebaseapp.com",
@@ -339,17 +317,26 @@ firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 
 let currentUser = null;
+let SECRET_KEY = null; // se pone al iniciar sesión
 
 /* LOGIN */
 function login() {
   const u = document.getElementById("user").value.trim();
   const p = document.getElementById("pass").value.trim();
+  const s = document.getElementById("secret").value.trim();
   const userLower = u.toLowerCase();
+
+  if (!u || !p || !s) {
+    document.getElementById("error").textContent = "Completa usuario, contraseña y clave secreta.";
+    return;
+  }
 
   if ((userLower === "yoerlin" && p === "Jarabacoa01") ||
       (userLower === "yoeimy" && p === "Jesus777")) {
 
     currentUser = u;
+    SECRET_KEY = s;
+
     mostrarChat();
 
   } else {
@@ -360,13 +347,20 @@ function login() {
 function guardarSesion() {
   const u = document.getElementById("user").value.trim();
   const p = document.getElementById("pass").value.trim();
+  const s = document.getElementById("secret").value.trim();
   const userLower = u.toLowerCase();
+
+  if (!u || !p || !s) {
+    alert("Completa usuario, contraseña y clave secreta.");
+    return;
+  }
 
   if ((userLower === "yoerlin" && p === "Jarabacoa01") ||
       (userLower === "yoeimy" && p === "Jesus777")) {
 
     localStorage.setItem("chatUser", u);
-    alert("Sesión guardada");
+    localStorage.setItem("chatSecret", s);
+    alert("Sesión guardada en este dispositivo.");
 
   } else {
     alert("Credenciales incorrectas");
@@ -374,9 +368,12 @@ function guardarSesion() {
 }
 
 window.onload = function() {
-  const saved = localStorage.getItem("chatUser");
-  if (saved) {
-    currentUser = saved;
+  const savedUser = localStorage.getItem("chatUser");
+  const savedSecret = localStorage.getItem("chatSecret");
+
+  if (savedUser && savedSecret) {
+    currentUser = savedUser;
+    SECRET_KEY = savedSecret;
     mostrarChat();
   }
 
@@ -390,14 +387,17 @@ function mostrarChat() {
   document.getElementById("chat").style.display = "flex";
 }
 
-/* CHAT */
+/* CHAT CON CIFRADO */
 function sendMsg() {
   const text = document.getElementById("text").value.trim();
-  if (!text || !currentUser) return;
+  if (!text || !currentUser || !SECRET_KEY) return;
+
+  // Cifrar texto
+  const encrypted = CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
 
   const msg = {
     user: currentUser,
-    text: text,
+    text: encrypted,
     time: new Date().toLocaleTimeString(),
     type: "text"
   };
@@ -424,19 +424,6 @@ function sendImage() {
   reader.readAsDataURL(file);
 }
 
-function sendSticker(url) {
-  if (!currentUser) return;
-
-  const msg = {
-    user: currentUser,
-    text: url,
-    time: new Date().toLocaleTimeString(),
-    type: "image"
-  };
-
-  db.ref("mensajes").push(msg);
-}
-
 function showMsg(msg) {
   const cont = document.getElementById("messages");
   const box = document.createElement("div");
@@ -444,7 +431,22 @@ function showMsg(msg) {
   box.className = "msg " + (msg.user === currentUser ? "me" : "other");
 
   if (msg.type === "text") {
-    box.textContent = msg.text;
+    let finalText = msg.text;
+
+    if (SECRET_KEY) {
+      try {
+        const bytes = CryptoJS.AES.decrypt(msg.text, SECRET_KEY);
+        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+        finalText = decrypted || "[Mensaje cifrado con otra clave]";
+      } catch (e) {
+        finalText = "[Mensaje cifrado con otra clave]";
+      }
+    } else {
+      finalText = "[Clave secreta no establecida]";
+    }
+
+    box.textContent = finalText;
+
   } else {
     box.innerHTML = '<img src="' + msg.text + '">';
   }
@@ -461,7 +463,9 @@ function borrarChat() {
 
 function cerrarSesion() {
   localStorage.removeItem("chatUser");
+  localStorage.removeItem("chatSecret");
   currentUser = null;
+  SECRET_KEY = null;
   location.reload();
 }
 
@@ -481,7 +485,7 @@ function toggleEmojiBox() {
 }
 </script>
 
-<!-- FIX EXTRA PARA TECLADO EN MÓVILES -->
+<!-- Fix extra para teclado en móviles -->
 <script>
 function fixHeight() {
   document.body.style.height = window.innerHeight + "px";
